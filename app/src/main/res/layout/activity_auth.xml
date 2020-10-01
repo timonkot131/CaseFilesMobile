@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/auth_grad"
+    tools:context=".AuthActivity">
+
+    <EditText
+        android:id="@+id/loginInput"
+        style="@style/InputTextStyle"
+        android:layout_width="307dp"
+        android:layout_centerHorizontal="true"
+        android:text="login"
+        android:nextFocusDown="@id/pwdInput"
+        android:layout_marginTop="320dp"
+        android:textColor="#7E7B7B"
+        android:textAlignment="center"
+        android:textSize="35dp" />
+
+    <EditText
+        android:id="@+id/pwdInput"
+        style="@style/InputTextStyle"
+        android:nextFocusDown="@id/enterButton"
+        android:layout_width="307dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/loginInput"
+        android:text="password"
+        android:layout_marginTop="20dp"
+        android:textColor="#7E7B7B"
+        android:textAlignment="center"
+        android:textSize="35dp" />
+
+    <Button
+        android:id="@+id/enterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_below="@id/pwdInput"
+        android:text="Войти"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textColor="#FFFF"
+        android:textSize="35dp"
+        android:layout_marginTop="80dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/common_button"/>
+
+    <TextView
+        android:id="@+id/toRegister"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:layout_width="307dp"
+        android:layout_centerHorizontal="true"
+        android:text="Зарегистрироваться"
+        android:textColor="#003DF4"
+        android:textAlignment="center"
+        android:layout_marginBottom="20dp"
+        android:textSize="30dp" />
+
+</RelativeLayout>
