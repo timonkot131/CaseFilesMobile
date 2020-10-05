@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="register">Зарегистрироваться</string>
+    <string name="enter_to_acc">Войти</string>
+    <string name="login_box">Логин</string>
+    <string name="password_box">Пароль</string>
+</resources>

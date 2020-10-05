@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">CaseFilesMobile</string>
+    <string translatable="false" name="app_name">CaseFilesMobile</string>
+    <string name="register">register</string>
+    <string name="enter_to_acc">Enter</string>
+    <string name="login_box">login</string>
+    <string name="password_box">password</string>
 </resources>

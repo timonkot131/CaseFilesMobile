@@ -1,25 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/auth_grad"
+    android:orientation="vertical"
     tools:context=".RegisterActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:text="Регистрация"/>
+
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/aaa"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="12dp"
-        app:boxStrokeWidth="20dp">
+        >
 
         <com.google.android.material.textfield.TextInputEditText
-            android:hint="Логин"
-            android:id="@+id/regLogin"
+            android:id="@+id/loginField"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_width="120dp"
+            android:hint="Логин"
+            android:singleLine="false" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="12dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:hint="Пароль"
+            android:id="@+id/pwdField"
+            android:inputType="textPassword"
+            android:layout_centerVertical="true"
+            android:layout_width="200dp"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
-</RelativeLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="12dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:hint="Возраст"
+            android:id="@+id/ageField"
+            android:layout_centerVertical="true"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="12dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:hint="Имя"
+            android:id="@+id/nameField"
+            android:layout_centerVertical="true"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="12dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:hint="Фамилия"
+            android:id="@+id/secondNameField"
+            android:layout_centerVertical="true"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Зарегестрироваться"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textColor="#FFFF"
+        android:textSize="21dp"
+        android:layout_marginTop="80dp"
+        android:layout_gravity="center"
+        android:background="@drawable/common_button"/>
+
+    <Button
+        android:id="@+id/backFromRegButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/common_button"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="Назад"
+        android:textColor="#FFFF"
+        android:textSize="21dp" />
+
+
+</LinearLayout>
