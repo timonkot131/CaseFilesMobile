@@ -1,4 +1,6 @@
 package com.example.casefilesmobile.viewmodels
 
-class TrackingCasesViewModel {
+import androidx.lifecycle.ViewModel
+
+class TrackingCasesViewModel() : ViewModel() {
 }

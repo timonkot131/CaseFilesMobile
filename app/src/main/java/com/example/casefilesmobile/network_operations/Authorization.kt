@@ -6,12 +6,15 @@ import com.google.gson.Gson
 import cz.msebera.android.httpclient.client.HttpClient
 import cz.msebera.android.httpclient.client.entity.EntityBuilder
 import cz.msebera.android.httpclient.client.methods.HttpPost
+import cz.msebera.android.httpclient.entity.ContentType
 import cz.msebera.android.httpclient.impl.client.HttpClients
 import cz.msebera.android.httpclient.util.EntityUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.net.HttpURLConnection
+import java.net.URL
 
 class Authorization {
 
@@ -30,10 +33,14 @@ class Authorization {
                 val json =
                     JSONObject()
                         .put("login", login)
-                        .put("pwd", pwd).toString(0)
+                        .put("pwd", pwd).toString()
 
-                val request = HttpPost("http://10.0.3.2:44370/api/cases/login")
-                request.entity = EntityBuilder.create().setText(json).build()
+                val request = HttpPost("http://10.0.3.2:5000/api/cases/login")
+                request.entity = EntityBuilder.create()
+                    .setText(json)
+                    .setContentType(ContentType.APPLICATION_JSON)
+                    .build()
+
 
                 val response = client.execute(request)
 

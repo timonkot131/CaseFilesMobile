@@ -8,6 +8,7 @@ import cz.msebera.android.httpclient.client.HttpClient
 import cz.msebera.android.httpclient.client.entity.EntityBuilder
 import cz.msebera.android.httpclient.client.methods.HttpPost
 import cz.msebera.android.httpclient.client.methods.RequestBuilder
+import cz.msebera.android.httpclient.entity.ContentType
 import cz.msebera.android.httpclient.impl.client.HttpClients
 import cz.msebera.android.httpclient.util.EntityUtils
 import kotlinx.coroutines.CoroutineScope
@@ -24,8 +25,11 @@ class Registration {
 
                 val json = gson.toJson(account)
 
-                val request = HttpPost("https://localhost:44370/api/cases/register")
-                request.entity = EntityBuilder.create().setText(json).build()
+                val request = HttpPost("http://10.0.3.2:5000/api/cases/register")
+                request.entity = EntityBuilder.create()
+                    .setText(json)
+                    .setContentType(ContentType.APPLICATION_JSON)
+                    .build()
 
                 val response = client.execute(request)
 

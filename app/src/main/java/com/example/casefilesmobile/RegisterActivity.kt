@@ -19,15 +19,15 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        enterButton.setOnClickListener {
+        registerButton.setOnClickListener {
             val acc = Account(
                 0,
-                loginField.toString(),
-                pwdField.toString(),
-                ageField.toString().toInt(),
+                loginField.text.toString(),
+                pwdField.text.toString(),
+                ageField.text.toString().toInt(),
                 Calendar.getInstance().timeInMillis,
-                nameField.toString(),
-                secondNameField.toString()
+                nameField.text.toString(),
+                secondNameField.text.toString()
             )
 
             Registration.register(scope, acc) {

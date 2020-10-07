@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableString
+import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
@@ -26,8 +27,8 @@ class AuthActivity : AppCompatActivity() {
         loginInput.tag = notPressed
         pwdInput.tag = notPressed
 
-        loginInput.setOnClickListener(::clearTextOnce)
-        pwdInput.setOnClickListener(::clearTextOnce)
+        loginInput.setOnFocusChangeListener (::clearTextOnce)
+        pwdInput.setOnFocusChangeListener(::clearTextOnce)
 
         toRegister.setOnClickListener{
             startActivity(Intent(this, RegisterActivity::class.java))
@@ -43,7 +44,7 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
-    private fun clearTextOnce(v: View) {
+    private fun clearTextOnce(v: View, hasFocus: Boolean){
         v as EditText
         if (v.tag == notPressed){
             v.tag = pressed
