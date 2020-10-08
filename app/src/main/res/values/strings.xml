@@ -4,4 +4,7 @@
     <string name="enter_to_acc">Enter</string>
     <string name="login_box">login</string>
     <string name="password_box">password</string>
+    <string translatable="false" name="date_formatting">yyyy-MM-dd</string>
+    <string translatable="false" name="time_formatting">HH:mm</string>
+    <string translatable="false" name="date_and_time">%1s %2s</string>
 </resources>

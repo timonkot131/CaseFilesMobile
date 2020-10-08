@@ -24,12 +24,6 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
 
-        loginInput.tag = notPressed
-        pwdInput.tag = notPressed
-
-        loginInput.setOnFocusChangeListener (::clearTextOnce)
-        pwdInput.setOnFocusChangeListener(::clearTextOnce)
-
         toRegister.setOnClickListener{
             startActivity(Intent(this, RegisterActivity::class.java))
         }
@@ -42,18 +36,5 @@ class AuthActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    private fun clearTextOnce(v: View, hasFocus: Boolean){
-        v as EditText
-        if (v.tag == notPressed){
-            v.tag = pressed
-            v.text.delete(0, v.text.length)
-        }
-    }
-
-    companion object {
-        const val pressed = true
-        const val notPressed = false
     }
 }

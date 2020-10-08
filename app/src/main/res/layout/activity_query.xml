@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/auth_grad"
+    android:padding="10dp"
+    tools:context=".QueryActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="20dp"
+        android:orientation="vertical"
+        android:background="@drawable/whitecard">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="25dp"
+            android:text="Новый запрос"
+            android:layout_marginBottom="10dp"/>
+
+        <EditText
+            android:textAlignment="center"
+            android:textSize="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Номер дела"
+            />
+        <EditText
+            android:textAlignment="center"
+            android:textSize="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Сторона"
+            />
+        <EditText
+            android:textAlignment="center"
+            android:inputType="date"
+            android:textSize="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="С числа"
+            />
+        <EditText
+            android:textAlignment="center"
+            android:inputType="date"
+            android:textSize="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="По число"
+            />
+
+        <Button
+            android:id="@+id/backFromRegButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/common_button"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="ИСКАТЬ!"
+            android:textColor="#FFFF"
+            android:textSize="21dp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

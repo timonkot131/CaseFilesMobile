@@ -21,9 +21,9 @@ data class ShortCase(
     val id: String,
     val judge: String,
     val number: String,
-    val
-    val sides: Array<HashMap<String, String>>,
-    val events: Array<HashMap<String, String>>
+    val registrationDate: String,
+    val court: String,
+    val sides: Array<HashMap<String, String>>
 )
 
 data class TrackingCase(
@@ -47,5 +47,7 @@ data class CaseQuery(
 data class AccountResponse(val account: Account?, val code: Int)
 
 data class BigCaseResponse(val cases: List<BigCase>, val code: Int)
+
+data class ShortCaseResponse(val cases: List<ShortCase>, val code: Int)
 
 data class TrackingResponse(val cases: List<TrackingCase>, val code: Int)

@@ -5,9 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.casefilesmobile.pojo.CaseQuery
-import com.example.casefilesmobile.pojo.ExploringCase
-import com.example.casefilesmobile.pojo.ExploringResponse
+import com.example.casefilesmobile.pojo.*
 import com.google.gson.Gson
 import cz.msebera.android.httpclient.client.entity.EntityBuilder
 import cz.msebera.android.httpclient.client.methods.HttpEntityEnclosingRequestBase
@@ -21,8 +19,8 @@ import java.net.URI
 class ExploringCasesViewModel() : ViewModel() {
     val gson: Gson = Gson()
 
-    val cases: MutableLiveData<ExploringResponse> by lazy {
-        MutableLiveData<ExploringResponse>()
+    val cases: MutableLiveData<ShortCaseResponse> by lazy {
+        MutableLiveData<ShortCaseResponse>()
     }
 
     private val query: MutableLiveData<CaseQuery> by lazy {
@@ -36,7 +34,7 @@ class ExploringCasesViewModel() : ViewModel() {
 
             val get = object : HttpEntityEnclosingRequestBase() {
                 init{
-                    uri = URI("http://10.0.3.2:5000/api/cases/login")
+                    uri = URI("http://10.0.3.2:5000/api/cases")
                     entity = EntityBuilder.create()
                         .setText(json)
                         .setContentType(ContentType.APPLICATION_JSON)
@@ -48,11 +46,10 @@ class ExploringCasesViewModel() : ViewModel() {
             val res = client.execute(get)
 
             when(res.statusLine.statusCode) {
-                200 -> cases.value = ExploringResponse(gson.fromJson(res.entity.toString(), ExploringCase::class.java))
+                200 -> cases.value = ShortCaseResponse(gson.fromJson(res.entity.toString(), Array<ShortCase>::class.java).asList(), 200)
+                404 -> cases.value = ShortCaseResponse(arrayOf<ShortCase>().asList(), 204)
             }
         }
-
-
 
     fun requestCases() {
         requestCases(query.value)
