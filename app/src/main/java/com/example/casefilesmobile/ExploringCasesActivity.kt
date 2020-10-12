@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.os.Process
 import android.view.ContextThemeWrapper
 import android.view.View
 import android.widget.Toast
@@ -16,8 +17,6 @@ import com.example.casefilesmobile.pojo.CaseQuery
 import com.example.casefilesmobile.pojo.ShortCase
 import com.example.casefilesmobile.pojo.ShortCaseResponse
 import com.example.casefilesmobile.viewmodels.ExploringCasesViewModel
-import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_exploring_cases.*
 import kotlinx.android.synthetic.main.alert_search.*
 
@@ -37,6 +36,23 @@ class ExploringCasesActivity : AppCompatActivity() {
         exploringFab.setOnClickListener(::BuildDialog)
 
         model.requestCases()
+
+        exploringBottomBar.setNavigationIcon(R.drawable.ic_baseline_exit_to_app_24)
+        exploringBottomBar.setNavigationOnClickListener {
+            startActivity(Intent(this, AuthActivity::class.java))
+        }
+
+        exploringBottomBar.setOnCreateContextMenuListener { menu, v, menuInfo ->
+            menuInflater.inflate(R.menu.exploring_bottom_bar_menu, menu)
+        }
+
+        exploringBottomBar.setOnMenuItemClickListener {
+            when(it.itemId) {
+                R.id.app_bar_bottomTracking -> startActivity(Intent(this, TrackingActivity::class.java))
+            }
+
+            true
+        }
 
     }
 
@@ -93,4 +109,5 @@ class ExploringCasesActivity : AppCompatActivity() {
             200 -> updateCases(response.cases)
             else -> showMessage("Не удалось найти дела по указанному запросу")
         }
+
 }

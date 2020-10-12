@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.google.android.material.bottomappbar.BottomAppBar
-            android:id="@+id/exploringBottomBar"
+            android:id="@+id/trackingBottomBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"/>

@@ -1,5 +1,7 @@
 package com.example.casefilesmobile.pojo
 
+import kotlinx.coroutines.Job
+
 data class Account(
     val id: Int,
     val login: String,
@@ -12,9 +14,9 @@ data class Account(
 
 data class BigCase(
     val caseType: String,
-    val mainData: HashMap<String, String>,
-    val sides: Array<HashMap<String, String>>,
-    val events: Array<HashMap<String, String>>
+    val mainData: Table,
+    val sides: Table,
+    val events: Table
 )
 
 data class ShortCase(
@@ -22,6 +24,7 @@ data class ShortCase(
     val judge: String,
     val number: String,
     val registrationDate: String,
+    val bigCaseJob: Job,
     val court: String,
     val sides: Array<HashMap<String, String>>
 )
