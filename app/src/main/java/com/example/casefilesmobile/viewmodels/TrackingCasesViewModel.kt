@@ -3,6 +3,7 @@ package com.example.casefilesmobile.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.casefilesmobile.network_operations.TrackingCases.Companion.getUri
 import com.example.casefilesmobile.pojo.*
 import com.google.gson.Gson
 import cz.msebera.android.httpclient.HttpResponse
@@ -15,6 +16,8 @@ import cz.msebera.android.httpclient.impl.client.HttpClients
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.net.URI
+
+import com.example.casefilesmobile.network_operations.TrackingCases
 
 class TrackingCasesViewModel() : ViewModel() {
 
@@ -36,18 +39,6 @@ class TrackingCasesViewModel() : ViewModel() {
         MutableLiveData<Int>().apply { value = null }
     }
 
-    fun getUri(userId: Int, page: Int, size: Int?): URI {
-        val builder = URIBuilder()
-            .setPath("http://10.0.3.2:5000/api/cases/trackedcases/" + userId)
-            .addParameter("page", page.toString())
-
-        size?.let{
-            builder.addParameter("size", it.toString())
-        }
-
-        return builder.build()
-    }
-
     fun handleResponse(res: HttpResponse) =
         when (res.statusLine.statusCode) {
             200 -> cases.value = TrackingResponse(
@@ -64,7 +55,7 @@ class TrackingCasesViewModel() : ViewModel() {
         viewModelScope.launch(Dispatchers.Default) {
             this@TrackingCasesViewModel.page.value = page ?: 0
             val client = HttpClients.createDefault()
-            val get = HttpGet(getUri(userId, page ?: 0, size))
+            val get = HttpGet(TrackingCases.getUri(userId, page ?: 0, size))
             handleResponse(client.execute(get))
         }
 

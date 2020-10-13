@@ -27,7 +27,6 @@ class TrackingRecyclerAdapter (
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = with(caseArray[position]) {
         holder.court.text = court
         holder.number.text = number
-        holder.decision.text = decision
 
         val date = SimpleDateFormat(context.getString(R.string.date_formatting)).format(registrDate)
         val time = SimpleDateFormat(context.getString(R.string.time_formatting)).format(registrDate)
@@ -56,6 +55,5 @@ class TrackingRecyclerAdapter (
         var number: TextView = v.trackNumber
         var date: TextView = v.trackDate
         var court: TextView = v.trackCourt
-        var decision: TextView = v.trackDecision
     }
 }

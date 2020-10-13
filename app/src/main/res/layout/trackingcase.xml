@@ -28,11 +28,4 @@
         android:paddingTop="12dp"
         android:text="Невероятный суд" />
 
-    <TextView
-        android:id="@+id/trackDecision"
-        android:layout_width="wrap_content"
-        android:layout_height="28dp"
-        android:layout_below="@id/trackCourt"
-        android:paddingTop="12dp"
-        android:text="Невероятный суд" />
 </RelativeLayout>

@@ -1,10 +1,13 @@
 package com.example.casefilesmobile
 
+import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.ArrayList
 
 fun JSONArray.toList(): List<JSONObject> {
     val result = mutableListOf<JSONObject>()
@@ -16,6 +19,20 @@ fun JSONArray.toList(): List<JSONObject> {
     return result
 }
 
+fun ViewGroup.addViews(views: List<View>){
+    repeat(views.count()){
+        this.addView(views[it])
+    }
+}
+
+fun <T> List<T>.toArrayList(): ArrayList<T> {
+    return arrayListOf<T>().apply {
+        addAll(this@toArrayList)
+    }
+}
+
+
 fun <T> LiveData<T>.observe(owner: LifecycleOwner, func: (T) -> Unit) {
+
     observe(owner, Observer<T>(func))
 }

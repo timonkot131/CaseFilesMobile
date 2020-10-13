@@ -1,5 +1,10 @@
 package com.example.casefilesmobile.pojo
 
+import android.os.Parcelable
+import com.example.casefilesmobile.POJO.Table
+import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
 
 data class Account(
@@ -12,31 +17,28 @@ data class Account(
     val secondName: String
 )
 
-data class BigCase(
-    val caseType: String,
-    val mainData: Table,
-    val sides: Table,
-    val events: Table
-)
 
+@Parcelize
 data class ShortCase(
     val id: String,
     val judge: String,
     val number: String,
-    val registrationDate: String,
-    val bigCaseJob: Job,
-    val court: String,
-    val sides: Array<HashMap<String, String>>
-)
+    val registrationDate: Long,
+    val court: String
+) : Parcelable
+{
+    @IgnoredOnParcel
+    var bigCaseJob: Deferred<BigCase?>? = null
+}
 
+@Parcelize
 data class TrackingCase(
     val id: Int,
-    val decision: String,
     val registrDate: Long,
     val court: String,
     val number: String,
     val json: String
-)
+) :Parcelable
 
 data class CaseQuery(
     val number: String,

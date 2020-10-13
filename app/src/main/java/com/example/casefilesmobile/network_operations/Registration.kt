@@ -9,6 +9,7 @@ import cz.msebera.android.httpclient.client.entity.EntityBuilder
 import cz.msebera.android.httpclient.client.methods.HttpPost
 import cz.msebera.android.httpclient.client.methods.RequestBuilder
 import cz.msebera.android.httpclient.entity.ContentType
+import cz.msebera.android.httpclient.impl.client.ContentEncodingHttpClient
 import cz.msebera.android.httpclient.impl.client.HttpClients
 import cz.msebera.android.httpclient.util.EntityUtils
 import kotlinx.coroutines.CoroutineScope
@@ -28,6 +29,7 @@ class Registration {
                 val request = HttpPost("http://10.0.3.2:5000/api/cases/register")
                 request.entity = EntityBuilder.create()
                     .setText(json)
+                    .setContentEncoding("utf-8")
                     .setContentType(ContentType.APPLICATION_JSON)
                     .build()
 

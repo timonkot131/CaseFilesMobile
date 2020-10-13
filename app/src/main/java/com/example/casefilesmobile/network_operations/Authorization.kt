@@ -38,6 +38,7 @@ class Authorization {
                 val request = HttpPost("http://10.0.3.2:5000/api/cases/login")
                 request.entity = EntityBuilder.create()
                     .setText(json)
+                    .setContentEncoding("utf-8")
                     .setContentType(ContentType.APPLICATION_JSON)
                     .build()
 
