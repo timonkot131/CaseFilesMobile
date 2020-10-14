@@ -41,19 +41,22 @@ class TrackingCasesViewModel() : ViewModel() {
     }
 
     fun handleResponse(res: HttpResponse) =
-        when (res.statusLine.statusCode) {
-            200 -> cases.value = TrackingResponse(
+        viewModelScope.launch(Dispatchers.Main) {
+            when (res.statusLine.statusCode) {
+                200 -> cases.value = TrackingResponse(
 
-                gson.fromJson<Array<TrackingCase>>(
-                    res.entity.toString(),
-                    object : TypeToken<Array<TrackingCases>>() {}.type
-                ).asList(), 200
-            )
-            204 -> cases.value = TrackingResponse(arrayOf<TrackingCase>().asList(), 204)
-            else -> cases.value = TrackingResponse(arrayOf<TrackingCase>().asList(), res.statusLine.statusCode)
+                    gson.fromJson<Array<TrackingCase>>(
+                        res.entity.toString(),
+                        object : TypeToken<Array<TrackingCases>>() {}.type
+                    ).asList(), 200
+                )
+                204 -> cases.value = TrackingResponse(arrayOf<TrackingCase>().asList(), 204)
+                else -> cases.value =
+                    TrackingResponse(arrayOf<TrackingCase>().asList(), res.statusLine.statusCode)
+            }
         }
 
-    fun requestCases(userId: Int, page: Int?, size: Int?) =
+    private fun requestCases(userId: Int, page: Int?, size: Int?) =
         viewModelScope.launch(Dispatchers.Default) {
             this@TrackingCasesViewModel.page.value = page ?: 0
             val client = HttpClients.createDefault()

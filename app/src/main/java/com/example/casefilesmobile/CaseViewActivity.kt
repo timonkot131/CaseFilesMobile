@@ -1,14 +1,11 @@
 package com.example.casefilesmobile
 
-import android.graphics.drawable.Icon
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.drawable.IconCompat
-import com.example.casefilesmobile.POJO.BigCase
-import com.example.casefilesmobile.POJO.Table
+import com.example.casefilesmobile.pojo.BigCase
+import com.example.casefilesmobile.pojo.Table
 import com.example.casefilesmobile.pojo.ShortCase
 import com.example.casefilesmobile.pojo.TrackingCase
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -18,9 +15,11 @@ import cz.msebera.android.httpclient.client.methods.HttpDelete
 import cz.msebera.android.httpclient.client.methods.HttpPost
 import cz.msebera.android.httpclient.impl.client.HttpClients
 import kotlinx.android.synthetic.main.activity_case_view.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
 
 class CaseViewActivity : AppCompatActivity() {
     private val gson = Gson()
@@ -28,7 +27,6 @@ class CaseViewActivity : AppCompatActivity() {
     private var shortCase: ShortCase? = null
     private var trackingCase: TrackingCase? = null
     private var userId = 0
-    private var number: String? = ""
 
     private var afterClickJob: Job? = null
 
@@ -50,8 +48,6 @@ class CaseViewActivity : AppCompatActivity() {
             caseType = getString(CASE_TYPE)
         }
 
-        number = shortCase?.number
-        number = trackingCase?.number
 
         trackingCase?.run {
             viewFab.setImageResource(R.drawable.ic_baseline_remove_24)
@@ -60,11 +56,14 @@ class CaseViewActivity : AppCompatActivity() {
 
         shortCase?.run {
             viewFab.setOnClickListener {
-                scope.launch {
+                scope.launch(Dispatchers.Default) {
                     val client = HttpClients.createDefault()
-                    val post = HttpPost("http://10.0.3.2:5000/api/cases/trackedcases/" + userId)
+                    val post = HttpPost("http://10.0.3.2:44370/api/cases/trackedCases/" + userId)
+                    val json = BigCase(caseType!!, mainData, sides, events).getJson()
+                    val case = TrackingCase(0, registrationDate, court, number, URLEncoder.encode(json.toString(), "utf-8"))
+
                     post.entity = EntityBuilder.create()
-                        .setText(BigCase(caseType!!, mainData, sides, events).serialize())
+                        .setText(gson.toJson(case))
                         .setContentEncoding("utf-8").build()
                     client.execute(post)
                 }
@@ -109,14 +108,10 @@ class CaseViewActivity : AppCompatActivity() {
         scope.launch {
             val client = HttpClients.createDefault()
             val delete =
-                HttpDelete("http://10.0.3.2:5000/api/cases/trackedcases/" + trackingCase!!.id)
+                HttpDelete("http://10.0.3.2:44370/api/cases/trackedCases/" + trackingCase!!.id)
             client.execute(delete)
         }
         v.hide()
-    }
-
-    private fun onExploringFabClick(v: View) {
-
     }
 
     override fun onDestroy() {
@@ -128,7 +123,6 @@ class CaseViewActivity : AppCompatActivity() {
         const val CASE_TYPE = "caseType"
         const val USER_ID = "userId"
         const val DATA = "commonData"
-        const val TYPE = ""
         const val EVENTS = "events"
         const val SIDES = "sides"
         const val MAINDATA = "maindata"

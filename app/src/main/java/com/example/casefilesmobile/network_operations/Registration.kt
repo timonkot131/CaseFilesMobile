@@ -26,7 +26,7 @@ class Registration {
 
                 val json = gson.toJson(account)
 
-                val request = HttpPost("http://10.0.3.2:5000/api/cases/register")
+                val request = HttpPost("http://10.0.3.2:44370/api/cases/register")
                 request.entity = EntityBuilder.create()
                     .setText(json)
                     .setContentEncoding("utf-8")

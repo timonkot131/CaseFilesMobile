@@ -1,8 +1,7 @@
-package com.example.casefilesmobile.POJO
+package com.example.casefilesmobile.pojo
 
 import android.os.Bundle
 import com.example.casefilesmobile.toArrayList
-import java.util.*
 
 data class Table(val headers: List<String>, val body: List<List<String>>) {
 

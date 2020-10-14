@@ -35,7 +35,7 @@ class Authorization {
                         .put("login", login)
                         .put("pwd", pwd).toString()
 
-                val request = HttpPost("http://10.0.3.2:5000/api/cases/login")
+                val request = HttpPost("http://10.0.3.2:44370/api/cases/login")
                 request.entity = EntityBuilder.create()
                     .setText(json)
                     .setContentEncoding("utf-8")
@@ -45,7 +45,7 @@ class Authorization {
 
                 val response = client.execute(request)
 
-                scope.launch(Dispatchers.Main) {
+                scope.launch(Dispatchers.Default) {
                     when (response.statusLine.statusCode) {
                         200 -> onComplete(
                             AccountResponse(

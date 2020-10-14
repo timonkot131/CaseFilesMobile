@@ -3,7 +3,7 @@ package com.example.casefilesmobile.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.casefilesmobile.POJO.BigCase
+import com.example.casefilesmobile.pojo.BigCase
 import com.example.casefilesmobile.network_operations.TrackingCases
 import com.example.casefilesmobile.pojo.CaseQuery
 import com.example.casefilesmobile.pojo.ShortCase
@@ -19,7 +19,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.launch
 import java.lang.Exception
-import java.lang.reflect.Type
 
 class ExploringCasesViewModel() : ViewModel() {
     val gson: Gson = Gson()
@@ -37,7 +36,7 @@ class ExploringCasesViewModel() : ViewModel() {
     }
 
     fun getUri(query: CaseQuery) = URIBuilder()
-        .setPath("http://10.0.3.2:5000/api/cases")
+        .setPath("http://10.0.3.2:44370/api/cases")
         .setCharset(Charsets.UTF_8)
         .addParameter("page", query.page.toString())
         .addParameter("size", query.pageSize.toString())
@@ -53,7 +52,7 @@ class ExploringCasesViewModel() : ViewModel() {
             val client = HttpClients.createDefault()
 
             val uri = URIBuilder()
-                .setPath("http://10.0.3.2:5000/api/cases/moreInfo")
+                .setPath("http://10.0.3.2:44370/api/cases/moreInfo")
                 .setCharset(Charsets.UTF_8)
                 .addParameter("court", shortCase.court)
                 .addParameter("number", shortCase.number)
@@ -104,14 +103,14 @@ class ExploringCasesViewModel() : ViewModel() {
                                 tracked?.let { json.filter { j -> !tracked.any { t -> t.number == j.number } } }
                             val filteredRes = shorts?.let { ShortCaseResponse(it, 200) }
                             val resp = filteredRes ?: ShortCaseResponse(json, 200)
-                            cases.value = resp
+                            viewModelScope.launch(Dispatchers.Main) {cases.value = resp}
                         }
 
-                        404 -> cases.value = ShortCaseResponse(arrayOf<ShortCase>().asList(), 204)
+                        else -> viewModelScope.launch(Dispatchers.Main) { cases.value = ShortCaseResponse(arrayOf<ShortCase>().asList(), 204)}
                     }
                 }
                 catch (ex: Exception){
-                    cases.value = ShortCaseResponse(arrayOf<ShortCase>().asList(), 500)
+                   viewModelScope.launch(Dispatchers.Main) { cases.value = ShortCaseResponse(arrayOf<ShortCase>().asList(), 500)}
                 }
             }
         }

@@ -31,7 +31,11 @@ class AuthActivity : AppCompatActivity() {
         enterButton.setOnClickListener {
             Authorization.login(scope, loginInput.text.toString(), pwdInput.text.toString()) {
                 when(it.code){
-                    200 -> Toast.makeText(this, "you have entered", Toast.LENGTH_SHORT).show()
+                    200 -> {
+                        val intent = Intent(this, ExploringCasesActivity::class.java)
+                        intent.putExtra(CaseViewActivity.USER_ID, it.account!!.id)
+                        startActivity(intent)
+                    }
                     404 -> Toast.makeText(this, "nice try", Toast.LENGTH_SHORT).show()
                 }
             }

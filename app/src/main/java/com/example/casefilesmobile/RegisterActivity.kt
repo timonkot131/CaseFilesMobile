@@ -1,5 +1,6 @@
 package com.example.casefilesmobile
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -32,7 +33,11 @@ class RegisterActivity : AppCompatActivity() {
 
             Registration.register(scope, acc) {
                 when (it.code) {
-                    200 -> Toast.makeText(this, "Congratulations", Toast.LENGTH_SHORT).show()
+                    200 -> {
+                        val intent = Intent(this, ExploringCasesActivity::class.java)
+                        intent.putExtra(CaseViewActivity.USER_ID, it.account!!.id)
+                        startActivity(intent)
+                    }
                     409 -> Toast.makeText(this, "somebody already picked up login", Toast.LENGTH_SHORT).show()
                 }
             }

@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.os.Process
 import android.view.ContextThemeWrapper
 import android.view.View
 import android.widget.Toast
@@ -19,17 +18,22 @@ import com.example.casefilesmobile.pojo.ShortCaseResponse
 import com.example.casefilesmobile.viewmodels.ExploringCasesViewModel
 import kotlinx.android.synthetic.main.activity_exploring_cases.*
 import kotlinx.android.synthetic.main.alert_search.*
+import kotlinx.coroutines.runBlocking
 
 class ExploringCasesActivity : AppCompatActivity() {
 
     private val model: ExploringCasesViewModel by viewModels()
     private var adapter: ExploringRecyclerAdapter? = null
 
+    private var userId: Int? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_exploring_cases)
 
         model.cases.observe(this, ::onCasesObserve)
+
+        userId = intent.extras?.getInt(CaseViewActivity.USER_ID)
 
         exploringRecycler.layoutManager = LinearLayoutManager(applicationContext)
 
@@ -48,12 +52,15 @@ class ExploringCasesActivity : AppCompatActivity() {
 
         exploringBottomBar.setOnMenuItemClickListener {
             when(it.itemId) {
-                R.id.app_bar_bottomTracking -> startActivity(Intent(this, TrackingActivity::class.java))
+                R.id.app_bar_bottomTracking -> {
+                    val intent = Intent(this, TrackingActivity::class.java)
+                    intent.putExtra(CaseViewActivity.USER_ID, userId)
+                    startActivity(intent)
+                }
             }
 
             true
         }
-
     }
 
     fun BuildDialog(v: View) {
@@ -67,22 +74,38 @@ class ExploringCasesActivity : AppCompatActivity() {
     }
 
     fun onPositiveButtonClick(dialog: DialogInterface, which: Int) {
-        val dialog = dialog as Dialog
+        val diag = dialog as Dialog
+
+        val from = diag.fromSearch.text.toString()
+        val to = diag.toSearch.text.toString()
 
         val query = CaseQuery(
-            dialog.numberSearch.toString(),
-            dialog.fromSearch.text.toString().toLong(),
-            dialog.toSearch.text.toString().toLong(),
-            dialog.sideSearch.text.toString(),
+            diag.numberSearch.text.toString(),
+            if (from.isBlank()) 0 else from.toLong(),
+            if (to.isBlank()) 0 else to.toLong(),
+            diag.sideSearch.text.toString(),
             0,
             10
         )
-        model.requestCases(query, )
-        dialog.cancel()
+        model.requestCases(query, userId)
+        diag.cancel()
     }
 
     private fun onExploringClick(case: ShortCase) {
-        startActivity(Intent(this, CaseViewActivity::class.java))
+        val intent = Intent(this, CaseViewActivity::class.java)
+        val bundle = intent.extras
+
+        runBlocking {
+            val bigCase = case.bigCaseJob!!.await()
+            bundle?.putInt(CaseViewActivity.USER_ID, userId!!)
+            bundle?.putString(CaseViewActivity.CASE_TYPE, bigCase?.caseType)
+            bundle?.putParcelable(CaseViewActivity.DATA, case)
+            bigCase?.events?.pushToBundle(bundle, CaseViewActivity.EVENTS)
+            bigCase?.mainData?.pushToBundle(bundle, CaseViewActivity.MAINDATA)
+            bigCase?.sides?.pushToBundle(bundle, CaseViewActivity.SIDES)
+        }
+
+        startActivity(intent)
     }
 
     private fun updateCases(cases: List<ShortCase>) {
@@ -110,7 +133,4 @@ class ExploringCasesActivity : AppCompatActivity() {
             else -> showMessage("Не удалось найти дела по указанному запросу")
         }
 
-    companion object{
-
-    }
 }

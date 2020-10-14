@@ -1,4 +1,4 @@
-package com.example.casefilesmobile.POJO
+package com.example.casefilesmobile.pojo
 
 import com.example.casefilesmobile.toList
 import org.json.JSONArray
@@ -10,7 +10,7 @@ data class BigCase(
     val sides: Table?,
     val events: Table?
 ) {
-    fun serialize() : String{
+    fun getJson() : JSONObject{
         val body = JSONObject()
         body.put("caseType", caseType)
 
@@ -46,7 +46,7 @@ data class BigCase(
         body.put("sides", sides)
         body.put("events", events)
 
-        return body.toString()
+        return body
     }
 
     companion object{
