@@ -42,7 +42,10 @@ class TrackingActivity : AppCompatActivity() {
     }
 
     private fun onTrackingClick(case: TrackingCase) {
-        startActivity(Intent(this, CaseViewActivity::class.java))
+        val intent = Intent(this, CaseViewActivity::class.java)
+        intent.putExtra(CaseViewActivity.DATA, case)
+        intent.putExtra(CaseViewActivity.USER_ID, userId)
+        startActivity(intent)
     }
 
     private fun updateCases(cases: List<TrackingCase>) {

@@ -77,7 +77,7 @@ class ExploringCasesActivity : AppCompatActivity() {
             0,
             10
         )
-        model.requestCases(query)
+        model.requestCases(query, )
         dialog.cancel()
     }
 
@@ -110,4 +110,7 @@ class ExploringCasesActivity : AppCompatActivity() {
             else -> showMessage("Не удалось найти дела по указанному запросу")
         }
 
+    companion object{
+
+    }
 }

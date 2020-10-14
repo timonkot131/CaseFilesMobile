@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import java.net.URI
 
 import com.example.casefilesmobile.network_operations.TrackingCases
+import com.google.gson.reflect.TypeToken
 
 class TrackingCasesViewModel() : ViewModel() {
 
@@ -42,9 +43,10 @@ class TrackingCasesViewModel() : ViewModel() {
     fun handleResponse(res: HttpResponse) =
         when (res.statusLine.statusCode) {
             200 -> cases.value = TrackingResponse(
-                gson.fromJson(
+
+                gson.fromJson<Array<TrackingCase>>(
                     res.entity.toString(),
-                    Array<TrackingCase>::class.java
+                    object : TypeToken<Array<TrackingCases>>() {}.type
                 ).asList(), 200
             )
             204 -> cases.value = TrackingResponse(arrayOf<TrackingCase>().asList(), 204)

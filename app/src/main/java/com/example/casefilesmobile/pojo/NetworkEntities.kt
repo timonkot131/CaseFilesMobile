@@ -1,6 +1,7 @@
 package com.example.casefilesmobile.pojo
 
 import android.os.Parcelable
+import com.example.casefilesmobile.POJO.BigCase
 import com.example.casefilesmobile.POJO.Table
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.IgnoredOnParcel
