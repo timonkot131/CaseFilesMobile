@@ -60,7 +60,7 @@ class CaseViewActivity : AppCompatActivity() {
                     val client = HttpClients.createDefault()
                     val post = HttpPost("http://10.0.3.2:44370/api/cases/trackedCases/" + userId)
                     val json = BigCase(caseType!!, mainData, sides, events).getJson()
-                    val case = TrackingCase(0, registrationDate, court, number, URLEncoder.encode(json.toString(), "utf-8"))
+                    val case = TrackingCase(0, registrationDate.time, court, number, URLEncoder.encode(json.toString(), "utf-8"))
 
                     post.entity = EntityBuilder.create()
                         .setText(gson.toJson(case))

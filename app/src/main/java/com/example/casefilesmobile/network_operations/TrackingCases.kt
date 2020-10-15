@@ -8,7 +8,7 @@ class TrackingCases {
     companion object{
         fun getUri(userId: Int, page: Int, size: Int?): URI {
             val builder = URIBuilder()
-                .setPath("http://10.0.3.2:44370/api/cases/trackedCases/" + userId)
+                .setHost("http://10.0.3.2:44370/api/cases/trackedCases/" + userId)
                 .addParameter("page", page.toString())
 
             size?.let{

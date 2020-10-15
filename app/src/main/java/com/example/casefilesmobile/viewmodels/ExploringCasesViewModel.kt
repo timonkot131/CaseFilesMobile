@@ -3,6 +3,7 @@ package com.example.casefilesmobile.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.casefilesmobile.adapters.UTCAdapter
 import com.example.casefilesmobile.pojo.BigCase
 import com.example.casefilesmobile.network_operations.TrackingCases
 import com.example.casefilesmobile.pojo.CaseQuery
@@ -10,18 +11,21 @@ import com.example.casefilesmobile.pojo.ShortCase
 import com.example.casefilesmobile.pojo.ShortCaseResponse
 import com.example.casefilesmobile.pojo.TrackingCase
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import cz.msebera.android.httpclient.client.methods.HttpGet
 import cz.msebera.android.httpclient.client.utils.URIBuilder
 import cz.msebera.android.httpclient.impl.client.HttpClients
+import cz.msebera.android.httpclient.util.EntityUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import java.util.*
 
 class ExploringCasesViewModel() : ViewModel() {
-    val gson: Gson = Gson()
+    val gson: Gson = GsonBuilder().registerTypeAdapter(Date::class.java, UTCAdapter()).create();
 
     val cases: MutableLiveData<ShortCaseResponse> by lazy {
         MutableLiveData<ShortCaseResponse>()
@@ -36,7 +40,8 @@ class ExploringCasesViewModel() : ViewModel() {
     }
 
     fun getUri(query: CaseQuery) = URIBuilder()
-        .setPath("http://10.0.3.2:44370/api/cases")
+        .setScheme("http")
+        .setHost("10.0.3.2:44370/api/cases")
         .setCharset(Charsets.UTF_8)
         .addParameter("page", query.page.toString())
         .addParameter("size", query.pageSize.toString())
@@ -52,7 +57,8 @@ class ExploringCasesViewModel() : ViewModel() {
             val client = HttpClients.createDefault()
 
             val uri = URIBuilder()
-                .setPath("http://10.0.3.2:44370/api/cases/moreInfo")
+                .setScheme("http")
+                .setHost("10.0.3.2:44370/api/cases/moreInfo")
                 .setCharset(Charsets.UTF_8)
                 .addParameter("court", shortCase.court)
                 .addParameter("number", shortCase.number)
@@ -60,7 +66,7 @@ class ExploringCasesViewModel() : ViewModel() {
 
             val res = client.execute(HttpGet(uri))
             when (res.statusLine.statusCode) {
-                200 -> BigCase.parseJson(res.entity.toString())
+                200 -> BigCase.parseJson(EntityUtils.toString(res.entity))
                 else -> null
             }
         }
@@ -80,7 +86,7 @@ class ExploringCasesViewModel() : ViewModel() {
                         val trackRes = client.execute(getTrack)
                         when (trackRes.statusLine.statusCode) {
                             200 -> gson.fromJson<Array<TrackingCase>>(
-                                trackRes.entity.toString(),
+                                EntityUtils.toString(trackRes.entity),
                                 object : TypeToken<Array<TrackingCase>>() {}.type
                             ).asList()
                             else -> null
@@ -96,7 +102,7 @@ class ExploringCasesViewModel() : ViewModel() {
                     when (res.statusLine.statusCode) {
                         200 -> {
                             val json = gson.fromJson<Array<ShortCase>>(
-                                res.entity.toString(),
+                                EntityUtils.toString(res.entity),
                                 object : TypeToken<Array<ShortCase>>() {}.type
                             ).asList().map(::attachJob)
                             val shorts =

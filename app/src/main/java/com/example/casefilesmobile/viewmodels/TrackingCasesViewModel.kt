@@ -19,6 +19,7 @@ import java.net.URI
 
 import com.example.casefilesmobile.network_operations.TrackingCases
 import com.google.gson.reflect.TypeToken
+import cz.msebera.android.httpclient.util.EntityUtils
 
 class TrackingCasesViewModel() : ViewModel() {
 
@@ -46,7 +47,7 @@ class TrackingCasesViewModel() : ViewModel() {
                 200 -> cases.value = TrackingResponse(
 
                     gson.fromJson<Array<TrackingCase>>(
-                        res.entity.toString(),
+                        EntityUtils.toString(res.entity),
                         object : TypeToken<Array<TrackingCases>>() {}.type
                     ).asList(), 200
                 )

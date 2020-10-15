@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.coroutines.Deferred
+import java.util.*
 
 data class Account(
     val id: Int,
@@ -21,7 +22,7 @@ data class ShortCase(
     val id: String,
     val judge: String,
     val number: String,
-    val registrationDate: Long,
+    val registrationDate: Date,
     val court: String
 ) : Parcelable
 {
