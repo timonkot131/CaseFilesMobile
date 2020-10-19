@@ -10,33 +10,37 @@ data class BigCase(
     val sides: Table?,
     val events: Table?
 ) {
-    fun getJson() : JSONObject{
+    fun getJson(): JSONObject {
         val body = JSONObject()
         body.put("caseType", caseType)
 
         val mainDataTable = mainData?.let { table ->
             val obj = JSONObject()
             table.body.forEach {
-                obj.put(it.first(),it.last())
+                obj.put(it.first(), it.last())
             }
             obj
         }
 
         val sides = sides?.let { table ->
             val array = JSONArray()
-            table.body.forEachIndexed { index, list ->
+            table.body.forEach { list ->
                 val obj = JSONObject()
-                obj.put(table.headers[index], list[index])
+                list.forEachIndexed { index, s ->
+                    obj.put(table.headers[index], s)
+                }
                 array.put(obj)
             }
             array
         }
 
-        val events = events?.let {  table ->
+        val events = events?.let { table ->
             val array = JSONArray()
-            table.body.forEachIndexed { index, list ->
+            table.body.forEach {list ->
                 val obj = JSONObject()
-                obj.put(table.headers[index], list[index])
+                list.forEachIndexed { index, s ->
+                    obj.put(table.headers[index], s)
+                }
                 array.put(obj)
             }
             array
@@ -49,7 +53,7 @@ data class BigCase(
         return body
     }
 
-    companion object{
+    companion object {
 
         fun parseCommonTable(array: JSONArray): Table {
             val headers = array.toList()
@@ -75,17 +79,17 @@ data class BigCase(
             val type = body.getString("caseType")
 
             val mainDataJson: JSONObject? =
-                if(!body.isNull("mainData"))
+                if (!body.isNull("mainData"))
                     body.getJSONObject("mainData")
                 else null
 
             val sides: JSONArray? =
-                if(!body.isNull("sides"))
+                if (!body.isNull("sides"))
                     body.getJSONArray("sides")
                 else null
 
             val events: JSONArray? =
-                if(!body.isNull("events"))
+                if (!body.isNull("events"))
                     body.getJSONArray("events")
                 else null
 
@@ -98,14 +102,14 @@ data class BigCase(
 
 
             var mainDataTable: Table? = mainData?.let {
-                Table(listOf("",""), it)
+                Table(listOf("", ""), it)
             }
 
-            val eventsDataTable: Table? = events?.let{
+            val eventsDataTable: Table? = events?.let {
                 parseCommonTable(it)
             }
 
-            val sidesDataTable: Table? = sides?.let{
+            val sidesDataTable: Table? = sides?.let {
                 parseCommonTable(it)
             }
 

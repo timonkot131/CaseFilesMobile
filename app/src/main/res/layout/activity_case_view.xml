@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
             android:layout_marginEnd="30dp"
-            app:layout_anchor="@id/exploringBottomBar"
+            app:layout_anchor="@id/viewBottomBar"
             app:fabSize="normal"
             android:scaleType="fitXY"
             android:src="@drawable/ic_baseline_remove_red_eye_24"/>

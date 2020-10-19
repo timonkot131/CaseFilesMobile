@@ -13,7 +13,9 @@ import com.google.gson.Gson
 import cz.msebera.android.httpclient.client.entity.EntityBuilder
 import cz.msebera.android.httpclient.client.methods.HttpDelete
 import cz.msebera.android.httpclient.client.methods.HttpPost
+import cz.msebera.android.httpclient.entity.ContentType
 import cz.msebera.android.httpclient.impl.client.HttpClients
+import cz.msebera.android.httpclient.protocol.HTTP
 import kotlinx.android.synthetic.main.activity_case_view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -42,8 +44,8 @@ class CaseViewActivity : AppCompatActivity() {
         var caseType: String? = ""
 
         intent.extras?.run {
-            shortCase = getParcelable<ShortCase>(DATA)
-            trackingCase = getParcelable<TrackingCase>(DATA)
+            shortCase = getParcelable<ShortCase>(SHORT_CASE)
+            trackingCase = getParcelable<TrackingCase>(TRACKING_CASE)
             userId = getInt(USER_ID)
             caseType = getString(CASE_TYPE)
         }
@@ -59,6 +61,8 @@ class CaseViewActivity : AppCompatActivity() {
                 scope.launch(Dispatchers.Default) {
                     val client = HttpClients.createDefault()
                     val post = HttpPost("http://10.0.3.2:44370/api/cases/trackedCases/" + userId)
+
+                    post.setHeader("Content-Type","application/json; charset=utf-8")
                     val json = BigCase(caseType!!, mainData, sides, events).getJson()
                     val case = TrackingCase(0, registrationDate.time, court, number, URLEncoder.encode(json.toString(), "utf-8"))
 
@@ -105,7 +109,7 @@ class CaseViewActivity : AppCompatActivity() {
 
     private fun onTrackingFabClick(v: View) {
         v as FloatingActionButton
-        scope.launch {
+        scope.launch(Dispatchers.Default) {
             val client = HttpClients.createDefault()
             val delete =
                 HttpDelete("http://10.0.3.2:44370/api/cases/trackedCases/" + trackingCase!!.id)
@@ -122,7 +126,8 @@ class CaseViewActivity : AppCompatActivity() {
     companion object {
         const val CASE_TYPE = "caseType"
         const val USER_ID = "userId"
-        const val DATA = "commonData"
+        const val SHORT_CASE = "shortCase"
+        const val TRACKING_CASE = "trackingCase"
         const val EVENTS = "events"
         const val SIDES = "sides"
         const val MAINDATA = "maindata"

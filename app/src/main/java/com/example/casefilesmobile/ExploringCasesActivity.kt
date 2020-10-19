@@ -6,6 +6,8 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.ContextThemeWrapper
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -30,6 +32,7 @@ class ExploringCasesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_exploring_cases)
+        setSupportActionBar(exploringBottomBar)
 
         model.cases.observe(this, ::onCasesObserve)
 
@@ -45,22 +48,22 @@ class ExploringCasesActivity : AppCompatActivity() {
         exploringBottomBar.setNavigationOnClickListener {
             startActivity(Intent(this, AuthActivity::class.java))
         }
+    }
 
-        exploringBottomBar.setOnCreateContextMenuListener { menu, v, menuInfo ->
-            menuInflater.inflate(R.menu.exploring_bottom_bar_menu, menu)
-        }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.exploring_bottom_bar_menu, menu)
+        return true
+    }
 
-        exploringBottomBar.setOnMenuItemClickListener {
-            when(it.itemId) {
-                R.id.app_bar_bottomTracking -> {
-                    val intent = Intent(this, TrackingActivity::class.java)
-                    intent.putExtra(CaseViewActivity.USER_ID, userId)
-                    startActivity(intent)
-                }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.app_bar_bottomTracking -> {
+                val intent = Intent(this, TrackingActivity::class.java)
+                intent.putExtra(TrackingActivity.USER_ID, userId)
+                startActivity(intent)
             }
-
-            true
         }
+        return true
     }
 
     fun BuildDialog(v: View) {
@@ -85,7 +88,7 @@ class ExploringCasesActivity : AppCompatActivity() {
             if (to.isBlank()) 0 else to.toLong(),
             diag.sideSearch.text.toString(),
             0,
-            10
+            2
         )
         model.requestCases(query, userId)
         diag.cancel()
@@ -93,19 +96,17 @@ class ExploringCasesActivity : AppCompatActivity() {
 
     private fun onExploringClick(case: ShortCase) {
         val intent = Intent(this, CaseViewActivity::class.java)
-        val bundle = intent.extras
 
         runBlocking {
             val bigCase = case.bigCaseJob!!.await()
-            bundle?.putInt(CaseViewActivity.USER_ID, userId!!)
-            bundle?.putString(CaseViewActivity.CASE_TYPE, bigCase?.caseType)
-            bundle?.putParcelable(CaseViewActivity.DATA, case)
-            bigCase?.events?.pushToBundle(bundle, CaseViewActivity.EVENTS)
-            bigCase?.mainData?.pushToBundle(bundle, CaseViewActivity.MAINDATA)
-            bigCase?.sides?.pushToBundle(bundle, CaseViewActivity.SIDES)
+            intent.putExtra(CaseViewActivity.USER_ID, userId!!)
+            intent.putExtra(CaseViewActivity.CASE_TYPE, bigCase?.caseType)
+            intent.putExtra(CaseViewActivity.SHORT_CASE, case)
+            bigCase?.events?.pushToBundle(intent, CaseViewActivity.EVENTS)
+            bigCase?.mainData?.pushToBundle(intent, CaseViewActivity.MAINDATA)
+            bigCase?.sides?.pushToBundle(intent, CaseViewActivity.SIDES)
+            startActivity(intent)
         }
-
-        startActivity(intent)
     }
 
     private fun updateCases(cases: List<ShortCase>) {

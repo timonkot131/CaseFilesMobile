@@ -1,18 +1,19 @@
 package com.example.casefilesmobile.pojo
 
+import android.content.Intent
 import android.os.Bundle
 import com.example.casefilesmobile.toArrayList
 
 data class Table(val headers: List<String>, val body: List<List<String>>) {
 
-    fun pushToBundle(bundle: Bundle?, id: String){
+    fun pushToBundle(intent: Intent, id: String){
         val b = Bundle()
         b.putStringArrayList(HEADERS, headers.toArrayList())
         b.putInt(ROW_COUNT, body.count())
         for (i in 0 until body.count()){
             b.putStringArrayList(i.toString(), body[i].toArrayList())
         }
-        bundle?.putBundle(id, b)
+        intent.putExtra(id, b)
     }
 
     companion object{

@@ -33,7 +33,7 @@ class UTCAdapter : JsonSerializer<Date?>, JsonDeserializer<Date?> {
 
     init {
         dateFormat =
-            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
     }
 }

@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="100dp"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:background="#FFFF"
+    android:paddingRight="16dp"
+    android:layout_marginBottom="5dp">
 
     <TextView
         android:id="@+id/shortNumber"

@@ -24,7 +24,7 @@ class TrackingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tracking)
 
-        savedInstanceState?.run {
+        intent.extras?.run {
             userId = getInt(USER_ID)
         }
 
@@ -40,13 +40,12 @@ class TrackingActivity : AppCompatActivity() {
         val bigCase = BigCase.parseJson(decodedJson)
 
         val intent = Intent(this, CaseViewActivity::class.java)
-        val bundle = intent.extras
-        bundle?.putParcelable(CaseViewActivity.DATA, case)
-        bundle?.putInt(CaseViewActivity.USER_ID, userId)
-        bundle?.putString(CaseViewActivity.CASE_TYPE, bigCase.caseType)
-        bigCase.mainData?.pushToBundle(bundle, CaseViewActivity.MAINDATA)
-        bigCase.sides?.pushToBundle(bundle, CaseViewActivity.SIDES)
-        bigCase.events?.pushToBundle(bundle, CaseViewActivity.EVENTS)
+        intent.putExtra(CaseViewActivity.TRACKING_CASE, case)
+        intent.putExtra(CaseViewActivity.USER_ID, userId)
+        intent.putExtra(CaseViewActivity.CASE_TYPE, bigCase.caseType)
+        bigCase.mainData?.pushToBundle(intent, CaseViewActivity.MAINDATA)
+        bigCase.sides?.pushToBundle(intent, CaseViewActivity.SIDES)
+        bigCase.events?.pushToBundle(intent, CaseViewActivity.EVENTS)
 
         startActivity(intent)
     }
@@ -59,7 +58,7 @@ class TrackingActivity : AppCompatActivity() {
                     cases.toMutableList(),
                     ::onTrackingClick
                 )
-            adapter = exploringRecycler.adapter as TrackingRecyclerAdapter
+            adapter = trackingRecycler.adapter as TrackingRecyclerAdapter
         }
 
         adapter?.update(cases)
