@@ -1,9 +1,15 @@
 package com.example.casefilesmobile
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import android.widget.GridLayout
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.marginLeft
+import androidx.core.view.setPadding
 import com.example.casefilesmobile.pojo.BigCase
 import com.example.casefilesmobile.pojo.Table
 import com.example.casefilesmobile.pojo.ShortCase
@@ -62,9 +68,15 @@ class CaseViewActivity : AppCompatActivity() {
                     val client = HttpClients.createDefault()
                     val post = HttpPost("http://10.0.3.2:44370/api/cases/trackedCases/" + userId)
 
-                    post.setHeader("Content-Type","application/json; charset=utf-8")
+                    post.setHeader("Content-Type", "application/json; charset=utf-8")
                     val json = BigCase(caseType!!, mainData, sides, events).getJson()
-                    val case = TrackingCase(0, registrationDate.time, court, number, URLEncoder.encode(json.toString(), "utf-8"))
+                    val case = TrackingCase(
+                        0,
+                        registrationDate.time,
+                        court,
+                        number,
+                        URLEncoder.encode(json.toString(), "utf-8")
+                    )
 
                     post.entity = EntityBuilder.create()
                         .setText(gson.toJson(case))
@@ -82,13 +94,13 @@ class CaseViewActivity : AppCompatActivity() {
 
         events?.let {
             eventsTable.columnCount = it.headers.count()
-            eventsTable.addViews(boldElems(mapToElems(it.headers)))
+            eventsTable.addViews(mapToElems(it.headers))
             eventsTable.addViews(mapToElems(it.body.flatten()))
         }
 
         sides?.let {
             sidesTable.columnCount = it.headers.count()
-            sidesTable.addViews(boldElems(mapToElems(it.headers)))
+            sidesTable.addViews(mapToElems(it.headers))
             sidesTable.addViews(mapToElems(it.body.flatten()))
         }
     }
@@ -97,15 +109,14 @@ class CaseViewActivity : AppCompatActivity() {
         list.map {
             TextView(this).apply {
                 text = it
+                setPadding(10)
             }
         }
 
-    private fun boldElems(list: List<TextView>): List<TextView> {
-        for (elem in list) {
-            elem.textSize += 2
+    private fun mapHeaders(list: List<TextView>) =
+        list.forEach {
+            it.textAlignment = View.TEXT_ALIGNMENT_CENTER
         }
-        return list
-    }
 
     private fun onTrackingFabClick(v: View) {
         v as FloatingActionButton

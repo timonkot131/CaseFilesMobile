@@ -113,7 +113,7 @@ data class BigCase(
                 parseCommonTable(it)
             }
 
-            return BigCase(type, mainDataTable, eventsDataTable, sidesDataTable)
+            return BigCase(type, mainDataTable,sidesDataTable, eventsDataTable )
         }
     }
 

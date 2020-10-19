@@ -7,32 +7,55 @@
     tools:context=".CaseViewActivity"
     android:background="@drawable/auth_grad">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_above="@id/viewCordinator">
 
-        <GridLayout
-            android:id="@+id/mainDataTable"
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp"
+                >
 
-        </GridLayout>
-        <GridLayout
-            android:id="@+id/sidesTable"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                <GridLayout
+                    android:id="@+id/mainDataTable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/whitecard"
+                    android:layout_marginTop="20dp"
+                    android:padding="10dp">
 
-        </GridLayout>
-        <GridLayout
-            android:id="@+id/eventsTable"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                </GridLayout>
+                <GridLayout
+                    android:id="@+id/sidesTable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/whitecard"
+                    android:padding="10dp"
+                    >
 
-        </GridLayout>
-    </LinearLayout>
+                </GridLayout>
+                <GridLayout
+                    android:id="@+id/eventsTable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/whitecard"
+                    android:padding="10dp">
+
+                </GridLayout>
+            </LinearLayout>
+        </HorizontalScrollView>
+    </ScrollView>
+
+
 
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

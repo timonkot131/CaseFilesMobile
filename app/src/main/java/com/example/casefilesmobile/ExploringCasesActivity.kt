@@ -62,6 +62,8 @@ class ExploringCasesActivity : AppCompatActivity() {
                 intent.putExtra(TrackingActivity.USER_ID, userId)
                 startActivity(intent)
             }
+            R.id.app_bar_prev -> model.previousPage()
+            R.id.app_bar_next -> model.nextPage()
         }
         return true
     }
