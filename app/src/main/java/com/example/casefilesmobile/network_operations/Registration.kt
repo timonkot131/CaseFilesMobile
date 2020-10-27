@@ -2,6 +2,7 @@ package com.example.casefilesmobile.network_operations
 
 import com.example.casefilesmobile.pojo.Account
 import com.example.casefilesmobile.pojo.AccountResponse
+import com.example.casefilesmobile.stringifyAsync
 import com.google.gson.Gson
 import cz.msebera.android.httpclient.HttpRequest
 import cz.msebera.android.httpclient.client.HttpClient
@@ -34,13 +35,14 @@ class Registration {
                     .build()
 
                 val response = client.execute(request)
+                val entityString = EntityUtils.toString(response.entity)
 
                 scope.launch(Dispatchers.Main) {
                     when (response.statusLine.statusCode) {
                         200 -> onComplete(
                             AccountResponse(
                                 gson.fromJson(
-                                    EntityUtils.toString(response.entity),
+                                    entityString,
                                     Account::class.java
                                 ), 200
                             )

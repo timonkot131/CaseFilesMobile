@@ -1,11 +1,16 @@
 package com.example.casefilesmobile
 
+import android.content.Entity
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import cz.msebera.android.httpclient.HttpEntity
+import cz.msebera.android.httpclient.util.EntityUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
@@ -43,3 +48,7 @@ fun View.setMargins( l: Int, t: Int, r: Int, b: Int) {
 fun <T> LiveData<T>.observe(owner: LifecycleOwner, func: (T) -> Unit) {
     observe(owner, Observer<T>(func))
 }
+
+fun HttpEntity.stringifyAsync(scope: CoroutineScope) =
+    scope.async { EntityUtils.toString(this@stringifyAsync) }
+

@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import java.net.URI
 
 import com.example.casefilesmobile.network_operations.TrackingCases
+import com.example.casefilesmobile.stringifyAsync
 import com.google.gson.reflect.TypeToken
 import cz.msebera.android.httpclient.HttpEntity
 import cz.msebera.android.httpclient.util.EntityUtils
@@ -44,17 +45,13 @@ class TrackingCasesViewModel() : ViewModel() {
         MutableLiveData<Int>().apply { value = null }
     }
 
-    fun stringEntity(e: HttpEntity) = viewModelScope.async(Dispatchers.Default) {
-        EntityUtils.toString(e)
-    }
-
     fun handleResponse(res: HttpResponse) =
         viewModelScope.launch(Dispatchers.Main) {
             when (res.statusLine.statusCode) {
                 200 -> cases.value = TrackingResponse(
 
                     gson.fromJson<Array<TrackingCase>>(
-                        stringEntity(res.entity).await(),
+                        res.entity.stringifyAsync(this).await(),
                         object : TypeToken<Array<TrackingCase>>() {}.type
                     ).asList(), 200
                 )
@@ -79,16 +76,4 @@ class TrackingCasesViewModel() : ViewModel() {
 
     }
 
-    fun nextPage() {
-        page.value?.let{
-            page.value = it + 1
-        }
-    }
-
-    fun previousPage(){
-        page.value?.let{
-            if (it <= 0) return@let
-            page.value = it - 1
-        }
-    }
 }

@@ -2,6 +2,7 @@ package com.example.casefilesmobile.network_operations
 
 import com.example.casefilesmobile.pojo.Account
 import com.example.casefilesmobile.pojo.AccountResponse
+import com.example.casefilesmobile.stringifyAsync
 import com.google.gson.Gson
 import cz.msebera.android.httpclient.client.HttpClient
 import cz.msebera.android.httpclient.client.entity.EntityBuilder
@@ -45,12 +46,12 @@ class Authorization {
 
                 val response = client.execute(request)
 
-                scope.launch(Dispatchers.Default) {
+                scope.launch(Dispatchers.Main) {
                     when (response.statusLine.statusCode) {
                         200 -> onComplete(
                             AccountResponse(
                                 gson.fromJson(
-                                    EntityUtils.toString(response.entity),
+                                    response.entity.stringifyAsync(this).await(),
                                     Account::class.java
                                 ), 200
                             )
