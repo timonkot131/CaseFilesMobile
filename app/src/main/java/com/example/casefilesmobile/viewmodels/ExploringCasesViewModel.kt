@@ -4,12 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.casefilesmobile.adapters.UTCAdapter
-import com.example.casefilesmobile.pojo.BigCase
 import com.example.casefilesmobile.network_operations.TrackingCases
-import com.example.casefilesmobile.pojo.CaseQuery
-import com.example.casefilesmobile.pojo.ShortCase
-import com.example.casefilesmobile.pojo.ShortCaseResponse
-import com.example.casefilesmobile.pojo.TrackingCase
+import com.example.casefilesmobile.pojo.*
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -17,15 +13,11 @@ import cz.msebera.android.httpclient.client.methods.HttpGet
 import cz.msebera.android.httpclient.client.utils.URIBuilder
 import cz.msebera.android.httpclient.impl.client.HttpClients
 import cz.msebera.android.httpclient.util.EntityUtils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.launch
-import java.lang.Exception
+import kotlinx.coroutines.*
 import java.util.*
 
-class ExploringCasesViewModel() : ViewModel() {
-    val gson: Gson = GsonBuilder().registerTypeAdapter(Date::class.java, UTCAdapter()).create();
+class ExploringCasesViewModel : ViewModel() {
+    val gson: Gson = GsonBuilder().registerTypeAdapter(Date::class.java, UTCAdapter()).create()
 
     val cases: MutableLiveData<ShortCaseResponse> by lazy {
         MutableLiveData<ShortCaseResponse>()
@@ -39,35 +31,38 @@ class ExploringCasesViewModel() : ViewModel() {
         MutableLiveData<CaseQuery>().apply { value = null }
     }
 
-    fun getUri(query: CaseQuery) = URIBuilder()
+    private fun getUri(query: CaseQuery) = URIBuilder()
         .setScheme("http")
         .setHost("10.0.3.2:44370/api/cases")
         .setCharset(Charsets.UTF_8)
+        .addParameter("region", query.region)
+        .addParameter("courtName", query.court)
         .addParameter("page", query.page.toString())
-        .addParameter("size", query.pageSize.toString())
         .addParameter("number", query.number)
         .addParameter("side", query.side)
         .addParameter("toDate", query.to.toString())
         .addParameter("fromDate", query.from.toString())
         .build()
 
+    private fun attachJob(shortCase: ShortCase): ShortCase {
+        val job: () -> Deferred<BigCase?> = {
+            viewModelScope.async(Dispatchers.IO) {
+                val client = HttpClients.createDefault()
 
-    fun attachJob(shortCase: ShortCase): ShortCase {
-        val job: Deferred<BigCase?> = viewModelScope.async(Dispatchers.Default) {
-            val client = HttpClients.createDefault()
+                val uri = URIBuilder()
+                    .setScheme("http")
+                    .setHost("10.0.3.2:44370/api/cases/moreInfo")
+                    .setCharset(Charsets.UTF_8)
+                    .addParameter("court", shortCase.court)
+                    .addParameter("region", shortCase.region)
+                    .addParameter("number", shortCase.number)
+                    .build()
 
-            val uri = URIBuilder()
-                .setScheme("http")
-                .setHost("10.0.3.2:44370/api/cases/moreInfo")
-                .setCharset(Charsets.UTF_8)
-                .addParameter("court", shortCase.court)
-                .addParameter("number", shortCase.number)
-                .build()
-
-            val res = client.execute(HttpGet(uri))
-            when (res.statusLine.statusCode) {
-                200 -> BigCase.parseJson(EntityUtils.toString(res.entity))
-                else -> null
+                val res = client.execute(HttpGet(uri))
+                when (res.statusLine.statusCode) {
+                    200 -> BigCase.parseJson(EntityUtils.toString(res.entity))
+                    else -> null
+                }
             }
         }
         shortCase.bigCaseJob = job
@@ -75,7 +70,7 @@ class ExploringCasesViewModel() : ViewModel() {
     }
 
     fun requestCases(query: CaseQuery?, id: Int?) =
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(Dispatchers.IO) {
             query?.let {
                 val client = HttpClients.createDefault()
                 val getShort = HttpGet(getUri(it))
@@ -91,8 +86,7 @@ class ExploringCasesViewModel() : ViewModel() {
                             ).asList()
                             else -> null
                         }
-                    }
-                    catch(ex: Exception) {
+                    } catch (ex: Exception) {
                         null
                     }
                 }
@@ -109,14 +103,17 @@ class ExploringCasesViewModel() : ViewModel() {
                                 tracked?.let { json.filter { j -> !tracked.any { t -> t.number == j.number } } }
                             val filteredRes = shorts?.let { ShortCaseResponse(it, 200) }
                             val resp = filteredRes ?: ShortCaseResponse(json, 200)
-                            viewModelScope.launch(Dispatchers.Main) {cases.value = resp}
+                            withContext(Dispatchers.Main) { cases.value = resp }
                         }
 
-                        else -> viewModelScope.launch(Dispatchers.Main) { cases.value = ShortCaseResponse(arrayOf<ShortCase>().asList(), 204)}
+                        else -> withContext(Dispatchers.Main) {
+                            cases.value = ShortCaseResponse(arrayOf<ShortCase>().asList(), 204)
+                        }
                     }
-                }
-                catch (ex: Exception){
-                   viewModelScope.launch(Dispatchers.Main) { cases.value = ShortCaseResponse(arrayOf<ShortCase>().asList(), 500)}
+                } catch (ex: Exception) {
+                    withContext(Dispatchers.Main) {
+                        cases.value = ShortCaseResponse(arrayOf<ShortCase>().asList(), 500)
+                    }
                 }
             }
         }

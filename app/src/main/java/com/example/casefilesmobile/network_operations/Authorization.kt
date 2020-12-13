@@ -3,30 +3,26 @@ package com.example.casefilesmobile.network_operations
 import com.example.casefilesmobile.pojo.Account
 import com.example.casefilesmobile.pojo.AccountResponse
 import com.example.casefilesmobile.stringifyAsync
+import com.example.casefilesmobile.withAsync
 import com.google.gson.Gson
 import cz.msebera.android.httpclient.client.HttpClient
 import cz.msebera.android.httpclient.client.entity.EntityBuilder
 import cz.msebera.android.httpclient.client.methods.HttpPost
 import cz.msebera.android.httpclient.entity.ContentType
 import cz.msebera.android.httpclient.impl.client.HttpClients
-import cz.msebera.android.httpclient.util.EntityUtils
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import java.net.HttpURLConnection
-import java.net.URL
 
 class Authorization {
 
     companion object {
-        fun login(
-            scope: CoroutineScope,
+        suspend fun login(
             login: String,
             pwd: String,
             onComplete: (r: AccountResponse) -> Unit
         ) {
-            scope.launch(Dispatchers.Default) {
+            withContext(Dispatchers.Default) {
                 val gson = Gson()
 
                 val client = HttpClients.createDefault() as HttpClient
@@ -43,15 +39,14 @@ class Authorization {
                     .setContentType(ContentType.APPLICATION_JSON)
                     .build()
 
+                val response = withAsync(Dispatchers.IO) { client.execute(request) }
 
-                val response = client.execute(request)
-
-                scope.launch(Dispatchers.Main) {
-                    when (response.statusLine.statusCode) {
+                withContext(Dispatchers.Main) {
+                    when (response.await().statusLine.statusCode) {
                         200 -> onComplete(
                             AccountResponse(
                                 gson.fromJson(
-                                    response.entity.stringifyAsync(this).await(),
+                                    response.await().entity.stringifyAsync().await(),
                                     Account::class.java
                                 ), 200
                             )

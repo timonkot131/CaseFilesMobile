@@ -1,18 +1,11 @@
 package com.example.casefilesmobile
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.SpannableString
-import android.view.MotionEvent
-import android.view.View
-import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.casefilesmobile.network_operations.Authorization
-import cz.msebera.android.httpclient.client.HttpClient
 import kotlinx.android.synthetic.main.activity_auth.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -29,14 +22,18 @@ class AuthActivity : AppCompatActivity() {
         }
 
         enterButton.setOnClickListener {
-            Authorization.login(scope, loginInput.text.toString(), pwdInput.text.toString()) {
-                when(it.code){
-                    200 -> {
-                        val intent = Intent(this, ExploringCasesActivity::class.java)
-                        intent.putExtra(CaseViewActivity.USER_ID, it.account!!.id)
-                        startActivity(intent)
+            scope.launch {
+                Authorization.login(loginInput.text.toString(), pwdInput.text.toString()) {
+                    when (it.code) {
+                        200 -> {
+                            val intent =
+                                Intent(this@AuthActivity, ExploringCasesActivity::class.java)
+                            intent.putExtra(CaseViewActivity.USER_ID, it.account!!.id)
+                            startActivity(intent)
+                        }
+                        404 -> Toast.makeText(this@AuthActivity, "nice try", Toast.LENGTH_SHORT)
+                            .show()
                     }
-                    404 -> Toast.makeText(this, "nice try", Toast.LENGTH_SHORT).show()
                 }
             }
         }

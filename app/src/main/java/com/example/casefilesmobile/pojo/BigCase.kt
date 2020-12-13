@@ -101,7 +101,7 @@ data class BigCase(
                     ?.map { listOf(it.first, it.second) }
 
 
-            var mainDataTable: Table? = mainData?.let {
+            val mainDataTable: Table? = mainData?.let {
                 Table(listOf("", ""), it)
             }
 

@@ -12,9 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".TrackingActivity"></activity>
-        <activity android:name=".PersonalCabinetActivity" />
         <activity android:name=".CaseViewActivity" />
-        <activity android:name=".QueryActivity" />
         <activity android:name=".ExploringCasesActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".AuthActivity">

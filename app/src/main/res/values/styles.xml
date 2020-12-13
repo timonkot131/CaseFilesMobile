@@ -4,9 +4,19 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">#FF3C63</item>
     </style>
-    
+
+    <style name="alertDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:textColor">#FF6200EE</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/blackTextButton</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/blackTextButton</item>
+    </style>
+
+    <style name="blackTextButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">#FF6200EE</item>
+    </style>
+
     <style name="InputTextStyle">
         <item name="android:background">@drawable/input</item>
         <item name="android:layout_width">wrap_content</item>

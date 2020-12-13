@@ -1,16 +1,15 @@
 package com.example.casefilesmobile
 
-import android.content.Entity
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
+import android.widget.DatePicker
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import cz.msebera.android.httpclient.HttpEntity
 import cz.msebera.android.httpclient.util.EntityUtils
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
@@ -49,6 +48,10 @@ fun <T> LiveData<T>.observe(owner: LifecycleOwner, func: (T) -> Unit) {
     observe(owner, Observer<T>(func))
 }
 
-fun HttpEntity.stringifyAsync(scope: CoroutineScope) =
-    scope.async { EntityUtils.toString(this@stringifyAsync) }
+val DatePicker.epochTicks: Long
+    get() = Date(year, month, dayOfMonth).time
+
+suspend fun HttpEntity.stringifyAsync() = withAsync(Dispatchers.IO) {
+    EntityUtils.toString(this@stringifyAsync)
+}
 

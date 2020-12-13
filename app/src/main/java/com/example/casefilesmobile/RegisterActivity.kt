@@ -1,16 +1,14 @@
 package com.example.casefilesmobile
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.example.casefilesmobile.network_operations.Authorization
+import androidx.appcompat.app.AppCompatActivity
 import com.example.casefilesmobile.network_operations.Registration
 import com.example.casefilesmobile.pojo.Account
-import kotlinx.android.synthetic.main.activity_auth.*
-import kotlinx.android.synthetic.main.activity_auth.enterButton
 import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class RegisterActivity : AppCompatActivity() {
@@ -31,14 +29,21 @@ class RegisterActivity : AppCompatActivity() {
                 secondNameField.text.toString()
             )
 
-            Registration.register(scope, acc) {
-                when (it.code) {
-                    200 -> {
-                        val intent = Intent(this, ExploringCasesActivity::class.java)
-                        intent.putExtra(CaseViewActivity.USER_ID, it.account!!.id)
-                        startActivity(intent)
+            scope.launch {
+                Registration.register(acc) {
+                    when (it.code) {
+                        200 -> {
+                            val intent =
+                                Intent(this@RegisterActivity, ExploringCasesActivity::class.java)
+                            intent.putExtra(CaseViewActivity.USER_ID, it.account!!.id)
+                            startActivity(intent)
+                        }
+                        409 -> Toast.makeText(
+                            this@RegisterActivity,
+                            "somebody already picked up login",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                    409 -> Toast.makeText(this, "somebody already picked up login", Toast.LENGTH_SHORT).show()
                 }
             }
         }

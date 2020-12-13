@@ -2,25 +2,21 @@ package com.example.casefilesmobile.network_operations
 
 import com.example.casefilesmobile.pojo.Account
 import com.example.casefilesmobile.pojo.AccountResponse
-import com.example.casefilesmobile.stringifyAsync
+import com.example.casefilesmobile.withAsync
 import com.google.gson.Gson
-import cz.msebera.android.httpclient.HttpRequest
 import cz.msebera.android.httpclient.client.HttpClient
 import cz.msebera.android.httpclient.client.entity.EntityBuilder
 import cz.msebera.android.httpclient.client.methods.HttpPost
-import cz.msebera.android.httpclient.client.methods.RequestBuilder
 import cz.msebera.android.httpclient.entity.ContentType
-import cz.msebera.android.httpclient.impl.client.ContentEncodingHttpClient
 import cz.msebera.android.httpclient.impl.client.HttpClients
 import cz.msebera.android.httpclient.util.EntityUtils
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class Registration {
     companion object {
-        fun register (scope: CoroutineScope, account: Account, onComplete: (r: AccountResponse) -> Unit) {
-            scope.launch(Dispatchers.Default) {
+        suspend fun register(account: Account, onComplete: (r: AccountResponse) -> Unit) {
+            withContext(Dispatchers.Default) {
                 val gson = Gson()
 
                 val client = HttpClients.createDefault() as HttpClient
@@ -34,15 +30,16 @@ class Registration {
                     .setContentType(ContentType.APPLICATION_JSON)
                     .build()
 
-                val response = client.execute(request)
-                val entityString = EntityUtils.toString(response.entity)
+                val response = withAsync(Dispatchers.IO) { client.execute(request) }
+                val entityString =
+                    withAsync(Dispatchers.IO) { EntityUtils.toString(response.await().entity) }
 
-                scope.launch(Dispatchers.Main) {
-                    when (response.statusLine.statusCode) {
+                withContext(Dispatchers.Main) {
+                    when (response.await().statusLine.statusCode) {
                         200 -> onComplete(
                             AccountResponse(
                                 gson.fromJson(
-                                    entityString,
+                                    entityString.await(),
                                     Account::class.java
                                 ), 200
                             )

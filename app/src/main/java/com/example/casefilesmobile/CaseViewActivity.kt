@@ -1,33 +1,24 @@
 package com.example.casefilesmobile
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
-import android.widget.GridLayout
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.marginLeft
 import androidx.core.view.setPadding
+import com.example.casefilesmobile.network_operations.TrackingCases
 import com.example.casefilesmobile.pojo.BigCase
-import com.example.casefilesmobile.pojo.Table
 import com.example.casefilesmobile.pojo.ShortCase
+import com.example.casefilesmobile.pojo.Table
 import com.example.casefilesmobile.pojo.TrackingCase
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
-import cz.msebera.android.httpclient.client.entity.EntityBuilder
 import cz.msebera.android.httpclient.client.methods.HttpDelete
-import cz.msebera.android.httpclient.client.methods.HttpPost
-import cz.msebera.android.httpclient.entity.ContentType
 import cz.msebera.android.httpclient.impl.client.HttpClients
-import cz.msebera.android.httpclient.protocol.HTTP
 import kotlinx.android.synthetic.main.activity_case_view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import java.net.URLEncoder
 
 class CaseViewActivity : AppCompatActivity() {
     private val gson = Gson()
@@ -56,32 +47,16 @@ class CaseViewActivity : AppCompatActivity() {
             caseType = getString(CASE_TYPE)
         }
 
-
         trackingCase?.run {
             viewFab.setImageResource(R.drawable.ic_baseline_remove_24)
             viewFab.setOnClickListener(::onTrackingFabClick)
         }
 
-        shortCase?.run {
-            viewFab.setOnClickListener {
-                scope.launch(Dispatchers.Default) {
-                    val client = HttpClients.createDefault()
-                    val post = HttpPost("http://10.0.3.2:44370/api/cases/trackedCases/" + userId)
-
-                    post.setHeader("Content-Type", "application/json; charset=utf-8")
-                    val json = BigCase(caseType!!, mainData, sides, events).getJson()
-                    val case = TrackingCase(
-                        0,
-                        registrationDate.time,
-                        court,
-                        number,
-                        URLEncoder.encode(json.toString(), "utf-8")
-                    )
-
-                    post.entity = EntityBuilder.create()
-                        .setText(gson.toJson(case))
-                        .setContentEncoding("utf-8").build()
-                    client.execute(post)
+        shortCase?.let {
+            viewFab.setOnClickListener { _ ->
+                val bigCase = BigCase(caseType!!, mainData, sides, events)
+                scope.launch(Dispatchers.IO) {
+                    TrackingCases.addCase(userId, it, bigCase)
                 }
                 viewFab.hide()
             }
@@ -113,14 +88,9 @@ class CaseViewActivity : AppCompatActivity() {
             }
         }
 
-    private fun mapHeaders(list: List<TextView>) =
-        list.forEach {
-            it.textAlignment = View.TEXT_ALIGNMENT_CENTER
-        }
-
     private fun onTrackingFabClick(v: View) {
         v as FloatingActionButton
-        scope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.IO) {
             val client = HttpClients.createDefault()
             val delete =
                 HttpDelete("http://10.0.3.2:44370/api/cases/trackedCases/" + trackingCase!!.id)

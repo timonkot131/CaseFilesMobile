@@ -1,16 +1,16 @@
 package com.example.casefilesmobile
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.casefilesmobile.pojo.BigCase
 import com.example.casefilesmobile.adapters.TrackingRecyclerAdapter
-import com.example.casefilesmobile.pojo.*
+import com.example.casefilesmobile.pojo.BigCase
+import com.example.casefilesmobile.pojo.TrackingCase
+import com.example.casefilesmobile.pojo.TrackingResponse
 import com.example.casefilesmobile.viewmodels.TrackingCasesViewModel
-import kotlinx.android.synthetic.main.activity_exploring_cases.*
 import kotlinx.android.synthetic.main.activity_tracking.*
 import java.net.URLDecoder
 
@@ -28,11 +28,13 @@ class TrackingActivity : AppCompatActivity() {
             userId = getInt(USER_ID)
         }
 
+
         model.cases.observe(this, ::onCasesObserve)
 
         trackingRecycler.layoutManager = LinearLayoutManager(applicationContext)
 
         model.requestCases(userId)
+        trackingProgressBar.isIndeterminate = true
     }
 
     private fun onTrackingClick(case: TrackingCase) {
@@ -46,7 +48,6 @@ class TrackingActivity : AppCompatActivity() {
         bigCase.mainData?.pushToBundle(intent, CaseViewActivity.MAINDATA)
         bigCase.sides?.pushToBundle(intent, CaseViewActivity.SIDES)
         bigCase.events?.pushToBundle(intent, CaseViewActivity.EVENTS)
-
         startActivity(intent)
     }
 
@@ -69,13 +70,15 @@ class TrackingActivity : AppCompatActivity() {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
 
-    private fun onCasesObserve(response: TrackingResponse) =
+    private fun onCasesObserve(response: TrackingResponse) {
+        trackingProgressBar.isIndeterminate = false
         when (response.code) {
             200 -> updateCases(response.cases)
             else -> showMessage("Не удалось найти дела по указанному запросу")
         }
+    }
 
-    companion object{
+    companion object {
         const val USER_ID = "user_id"
     }
 }

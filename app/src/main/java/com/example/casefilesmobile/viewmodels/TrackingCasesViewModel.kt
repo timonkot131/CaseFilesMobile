@@ -1,31 +1,21 @@
 package com.example.casefilesmobile.viewmodels
 
-import android.content.Entity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.casefilesmobile.network_operations.TrackingCases.Companion.getUri
-import com.example.casefilesmobile.pojo.*
+import com.example.casefilesmobile.network_operations.TrackingCases
+import com.example.casefilesmobile.pojo.TrackingCase
+import com.example.casefilesmobile.pojo.TrackingResponse
+import com.example.casefilesmobile.stringifyAsync
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import cz.msebera.android.httpclient.HttpResponse
-import cz.msebera.android.httpclient.client.entity.EntityBuilder
-import cz.msebera.android.httpclient.client.methods.HttpEntityEnclosingRequestBase
 import cz.msebera.android.httpclient.client.methods.HttpGet
-import cz.msebera.android.httpclient.client.utils.URIBuilder
-import cz.msebera.android.httpclient.entity.ContentType
 import cz.msebera.android.httpclient.impl.client.HttpClients
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.net.URI
 
-import com.example.casefilesmobile.network_operations.TrackingCases
-import com.example.casefilesmobile.stringifyAsync
-import com.google.gson.reflect.TypeToken
-import cz.msebera.android.httpclient.HttpEntity
-import cz.msebera.android.httpclient.util.EntityUtils
-import kotlinx.coroutines.async
-
-class TrackingCasesViewModel() : ViewModel() {
+class TrackingCasesViewModel : ViewModel() {
 
     val gson: Gson = Gson()
 
@@ -33,25 +23,17 @@ class TrackingCasesViewModel() : ViewModel() {
         MutableLiveData<TrackingResponse>()
     }
 
-    private val userId: MutableLiveData<Int> by lazy {
-        MutableLiveData<Int>().apply { value = null }
-    }
-
     private val page: MutableLiveData<Int> by lazy {
         MutableLiveData<Int>().apply { value = 0 }
     }
 
-    private val size: MutableLiveData<Int> by lazy {
-        MutableLiveData<Int>().apply { value = null }
-    }
-
-    fun handleResponse(res: HttpResponse) =
+    private fun handleResponse(res: HttpResponse) =
         viewModelScope.launch(Dispatchers.Main) {
             when (res.statusLine.statusCode) {
                 200 -> cases.value = TrackingResponse(
 
                     gson.fromJson<Array<TrackingCase>>(
-                        res.entity.stringifyAsync(this).await(),
+                        res.entity.stringifyAsync().await(),
                         object : TypeToken<Array<TrackingCase>>() {}.type
                     ).asList(), 200
                 )
@@ -63,17 +45,16 @@ class TrackingCasesViewModel() : ViewModel() {
 
     private fun requestCases(userId: Int, page: Int?, size: Int?) {
         this.page.value = page ?: 0
-        viewModelScope.launch(Dispatchers.Default) {
+
+        viewModelScope.launch(Dispatchers.IO) {
             val client = HttpClients.createDefault()
             val get = HttpGet(TrackingCases.getUri(userId, page ?: 0, size))
             handleResponse(client.execute(get))
         }
     }
 
-
     fun requestCases(userId: Int) {
-        requestCases(userId, page.value, 10)
-
+        requestCases(userId, page.value, 999)
     }
 
 }

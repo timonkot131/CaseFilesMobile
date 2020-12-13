@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@drawable/auth_grad"
     android:layout_height="match_parent"
     tools:context=".TrackingActivity">
+
+    <ProgressBar
+        android:id="@+id/trackingProgressBar"
+        android:layout_alignParentTop="true"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="false"
+        android:layout_marginTop="-5dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/trackingRecycler"
+        android:layout_below="@id/trackingProgressBar"
         android:layout_width="match_parent"
         android:layout_alignParentTop="true"
         android:padding="20dp"
         android:layout_above="@+id/trackingCordinator"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/trackingCordinator"
