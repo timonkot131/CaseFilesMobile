@@ -7,4 +7,24 @@
     <string name="date_formatting" translatable="false">yyyy-MM-dd</string>
     <string name="time_formatting" translatable="false">HH:mm</string>
     <string name="date_and_time" translatable="false">%1s %2s</string>
+    <string name="Registration">Registration</string>
+    <string name="Login">Login</string>
+    <string name="Password">Password</string>
+    <string name="Age">Age</string>
+    <string name="Name">Name</string>
+    <string name="SecondName">Surname</string>
+    <string name="Register">Register</string>
+    <string name="Back">Back</string>
+    <string name="Region">Region</string>
+    <string name="Court">Court</string>
+    <string name="CaseNumber">CaseNumber</string>
+    <string name="Side">Side</string>
+    <string name="From">From</string>
+    <string name="To">To</string>
+    <string name="PleaseChoseRegion">please, choose region</string>
+    <string name="CantFindCases">Can\'t find cases by this query</string>
+    <string name="Search">Search</string>
+    <string name="Cancel">Cancel</string>
+    <string name="AlreadyPick">somebody already picked up login</string>
+    <string name="NiceTry">User not found</string>
 </resources>

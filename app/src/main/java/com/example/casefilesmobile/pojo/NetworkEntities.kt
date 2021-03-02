@@ -59,8 +59,8 @@ data class CaseQuery(
     val region: String,
     val court: String,
     val number: String,
-    val from: Long,
-    val to: Long,
+    val dateFrom: Long,
+    val dateTo: Long,
     val side: String,
     val page: Int
 )

@@ -15,6 +15,7 @@ import cz.msebera.android.httpclient.impl.client.HttpClients
 import cz.msebera.android.httpclient.util.EntityUtils
 import kotlinx.coroutines.*
 import java.util.*
+import kotlin.reflect.KSuspendFunction0
 
 class ExploringCasesViewModel : ViewModel() {
     val gson: Gson = GsonBuilder().registerTypeAdapter(Date::class.java, UTCAdapter()).create()
@@ -40,8 +41,8 @@ class ExploringCasesViewModel : ViewModel() {
         .addParameter("page", query.page.toString())
         .addParameter("number", query.number)
         .addParameter("side", query.side)
-        .addParameter("toDate", query.to.toString())
-        .addParameter("fromDate", query.from.toString())
+        .addParameter("dateTo", query.dateTo.toString())
+        .addParameter("dateFrom", query.dateFrom.toString())
         .build()
 
     private fun attachJob(shortCase: ShortCase): ShortCase {

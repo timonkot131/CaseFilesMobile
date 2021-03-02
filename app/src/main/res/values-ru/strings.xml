@@ -4,4 +4,24 @@
     <string name="enter_to_acc">Войти</string>
     <string name="login_box">Логин</string>
     <string name="password_box">Пароль</string>
+    <string name="Registration">Регистрация</string>
+    <string name="Login">Логин</string>
+    <string name="Password">Пароль</string>
+    <string name="Age">Возраст</string>
+    <string name="Name">Имя</string>
+    <string name="SecondName">Фамилия</string>
+    <string name="Register">Зарегестрироваться</string>
+    <string name="Back">Назад</string>
+    <string name="Region">Регион</string>
+    <string name="Court">Суд</string>
+    <string name="CaseNumber">Номер дела</string>
+    <string name="Side">Сторона</string>
+    <string name="From">От числа</string>
+    <string name="To">До числа</string>
+    <string name="PleaseChoseRegion">Пожалуйста, выберите регион</string>
+    <string name="CantFindCases">Не удалось найти дела по указанному запросу</string>
+    <string name="Search">Искать</string>
+    <string name="Cancel">Отмена</string>
+    <string name="AlreadyPick">Такой логин уже занят</string>
+    <string name="NiceTry">Пользователь не найден</string>
 </resources>

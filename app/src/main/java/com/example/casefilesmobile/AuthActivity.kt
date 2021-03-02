@@ -31,7 +31,7 @@ class AuthActivity : AppCompatActivity() {
                             intent.putExtra(CaseViewActivity.USER_ID, it.account!!.id)
                             startActivity(intent)
                         }
-                        404 -> Toast.makeText(this@AuthActivity, "nice try", Toast.LENGTH_SHORT)
+                        404 -> Toast.makeText(this@AuthActivity, getString(R.string.NiceTry), Toast.LENGTH_SHORT)
                             .show()
                     }
                 }

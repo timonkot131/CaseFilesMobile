@@ -74,7 +74,7 @@ class TrackingActivity : AppCompatActivity() {
         trackingProgressBar.isIndeterminate = false
         when (response.code) {
             200 -> updateCases(response.cases)
-            else -> showMessage("Не удалось найти дела по указанному запросу")
+            else -> showMessage(getString(R.string.CantFindCases))
         }
     }
 

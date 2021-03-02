@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="19dp"
             android:textSize="19dp"
-            android:text="Регион" />
+            android:text="@string/Region" />
 
         <Spinner
             android:id="@+id/regSpinner"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:textSize="19dp"
             android:paddingLeft="19dp"
-            android:text="Суд" />
+            android:text="@string/Court" />
 
         <Spinner
             android:id="@+id/courtSpinner"
@@ -41,7 +41,7 @@
             android:textSize="19dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Номер дела" />
+            android:hint="@string/CaseNumber" />
 
         <EditText
             android:id="@+id/sideSearch"
@@ -50,14 +50,14 @@
             android:textSize="19dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Сторона" />
+            android:hint="@string/Side" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="19dp"
             android:paddingLeft="19dp"
-            android:text="От числа" />
+            android:text="@string/From" />
 
         <DatePicker
             android:id="@+id/fromSearch"
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:textSize="19dp"
             android:paddingLeft="19dp"
-            android:text="До числа" />
+            android:text="@string/To" />
 
         <DatePicker
             android:id="@+id/toSearch"

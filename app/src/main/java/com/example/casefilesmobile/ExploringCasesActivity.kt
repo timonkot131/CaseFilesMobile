@@ -76,9 +76,14 @@ class ExploringCasesActivity : AppCompatActivity() {
                 intent.putExtra(TrackingActivity.USER_ID, userId)
                 startActivity(intent)
             }
-            R.id.app_bar_prev -> model.previousPage()
-            R.id.app_bar_next -> model.nextPage()
+            else -> {
+                when(item.title) { //item returns fine title, but strange id
+                    "next" -> model.nextPage()
+                    "prev" -> model.previousPage()
+                }
+            }
         }
+
         return true
     }
 
@@ -86,8 +91,8 @@ class ExploringCasesActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(ContextThemeWrapper(this, R.style.alertDialogStyle))
         val inflater = this.layoutInflater
         builder.setView(inflater.inflate(R.layout.alert_search, null))
-            .setPositiveButton("Искать", ::onPositiveButtonClick)
-            .setNegativeButton("Отмена") { diag: DialogInterface, id: Int ->
+            .setPositiveButton(getString(R.string.Search), ::onPositiveButtonClick)
+            .setNegativeButton(getString(R.string.Cancel)) { diag: DialogInterface, id: Int ->
                 regSpinner = null
                 courtSpinner = null
                 diag.cancel()
@@ -130,13 +135,13 @@ class ExploringCasesActivity : AppCompatActivity() {
         val selectedRegionCode: RegionCode? = diag.regSpinner.selectedItem as RegionCode
 
         if (selectedRegionCode == null) {
-            Toast.makeText(this, "please, choose region", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.PleaseChoseRegion), Toast.LENGTH_LONG).show()
             return
         }
 
         val selectedCourtCode: CourtCode? = diag.courtSpinner.selectedItem as CourtCode
 
-        val from = diag.fromSearch.epochTicks
+        val from = diag.fromSearch.epochTicks // why fine? standard epoch ticks returns nonsense
         val to = diag.toSearch.epochTicks
 
         val query = CaseQuery(
@@ -201,10 +206,9 @@ class ExploringCasesActivity : AppCompatActivity() {
 
         when (response.code) {
             200 -> updateCases(response.cases)
-            else -> showMessage("Не удалось найти дела по указанному запросу")
+            else -> showMessage(getString(R.string.CantFindCases))
         }
     }
-
 
     private fun onCourtsObserve(list: List<CourtCode>) {
         courtSpinner?.let {

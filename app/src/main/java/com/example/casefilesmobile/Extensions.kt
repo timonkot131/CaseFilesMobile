@@ -36,20 +36,18 @@ fun <T> List<T>.toArrayList(): ArrayList<T> {
     }
 }
 
-fun View.setMargins( l: Int, t: Int, r: Int, b: Int) {
-    if (layoutParams is MarginLayoutParams) {
-        val p = layoutParams as MarginLayoutParams
-        p.setMargins(l, t, r, b)
-        requestLayout()
-    }
-}
-
 fun <T> LiveData<T>.observe(owner: LifecycleOwner, func: (T) -> Unit) {
     observe(owner, Observer<T>(func))
 }
 
-val DatePicker.epochTicks: Long
-    get() = Date(year, month, dayOfMonth).time
+val DatePicker.epochTicks : Long
+    get() {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.YEAR, year)
+        calendar.set(Calendar.MONTH, month)
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        return calendar.time.time
+    }
 
 suspend fun HttpEntity.stringifyAsync() = withAsync(Dispatchers.IO) {
     EntityUtils.toString(this@stringifyAsync)

@@ -18,6 +18,10 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
+        backFromRegButton.setOnClickListener {
+            startActivity(Intent(this, AuthActivity::class.java))
+        }
+
         registerButton.setOnClickListener {
             val acc = Account(
                 0,
@@ -40,12 +44,14 @@ class RegisterActivity : AppCompatActivity() {
                         }
                         409 -> Toast.makeText(
                             this@RegisterActivity,
-                            "somebody already picked up login",
+                            getString(R.string.AlreadyPick),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
             }
         }
+
+
     }
 }
